@@ -25,9 +25,9 @@ class client:
         self.vehicles_own = []
 
     def buy_vehicle(self, vehicle):
-        if vehicle.aviable == True:
-            vehicle.aviable == False
+        if vehicle in dealerShip.vehicles:
             self.vehicles_own.append(vehicle)
+            dealerShip.vehicles.remove(vehicle)
             print(f"!Felicidades {self.name}, has comprado {vehicle.name} año: {vehicle.year}!")
         else:
             print(f"El vehiculo: {vehicle.name} año: {vehicle.year} no está dispoible para su compra")
@@ -37,6 +37,7 @@ class client:
             print("El cliente no cuenta con algún vehiculo registrado")
         elif vehicle in self.vehicles_own:
             print(f"!Enhorabuena {self.name}, has vendido tu vehiculo: {vehicle.name} año: {vehicle.year}!")
+            self.vehicles_own.remove(vehicle)
         else:
             print("El cliente no cuenta con el vehiculo para su venta")
             
@@ -66,6 +67,8 @@ class dealerShip:
 
 #Crear vehiculo
 vehicle1 = vehicle("Aveo","Chevrolet","2008", 180000)
+vehicle2 = vehicle("Murcielago","Lamborghini","2012", 8480000)
+vehicle3 = vehicle("Aveo","Chevrolet","2008", 180000)
 
 #Crear cliente
 client1 = client("Harold", "001")
@@ -74,12 +77,17 @@ client1 = client("Harold", "001")
 dealerShip = dealerShip()
 dealerShip.register_client(client1)
 dealerShip.add_vehicle(vehicle1)
+dealerShip.add_vehicle(vehicle2)
+
 
 #Muestra vehiculos disponibles
 dealerShip.show_aviable_vehicles()
 
 #Comprar vehiculo
 client1.buy_vehicle(vehicle1)
+client1.buy_vehicle(vehicle2)
+client1.buy_vehicle(vehicle1)
 
 #Venta vehiculo
+client1.sell_vehicle(vehicle1)
 client1.sell_vehicle(vehicle1)
