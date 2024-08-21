@@ -1,5 +1,5 @@
 class Board:
-    def __init__(self, row, col):
+    def __init__(self, row=10, col=10):
         self.row = row
         self.col = col
         self.water = '.'
@@ -22,7 +22,7 @@ class Board:
     def modifyBoard(self, col, row, element):
         self.board[col-1][row-1] = element
 
-class Ship():
+class Ship:
     def __init__(self, player):
         self.player = player
         self.cells = []
@@ -96,7 +96,7 @@ class Destroyer (Ship):
             "Coordinates_xy": self.coordinates_xy
         }
 
-class Player():
+class Player:
     def __init__(self, name):
         self.name = name
         self.ships = []
@@ -134,60 +134,81 @@ class Player():
 class Game():
     def __init__(self):
         self.players = []
-    
+
+    def inicialize_game(self):
+        print("Bienvenidos a warShip")
+        jugador_1_name = input("Jugador 1, escribe tu nombre: ")
+        jugador_2_name = input("Jugador 2, escribe tu nombre: ")
+        player_1 = Player(jugador_1_name)
+        player_2 = Player(jugador_2_name)
+        self.add_player(player_1)
+        self.add_player(player_2)
+        board_1 = Board() 
+        board_2 = Board()
+        board_1.createBoard()
+        board_2.createBoard()
+        
+        barco_1 = AircraftCarrier(player_1)
+        barco_2 = Battleship(player_1)
+        barco_3 = Battleship(player_1)
+        barco_4 = Cruiser(player_1)
+        barco_5 = Submarine(player_1)
+
+        barco_1.create_ship()
+        barco_2.create_ship()
+        barco_3.create_ship()
+        barco_4.create_ship()
+        barco_5.create_ship()
+        
+        barco_6 = AircraftCarrier(player_1)
+        barco_7 = Battleship(player_1)
+        barco_8 = Battleship(player_1)
+        barco_9 = Cruiser(player_1)
+        barco_10 = Submarine(player_1)
+
+        barco_6.create_ship()
+        barco_7.create_ship()
+        barco_8.create_ship()
+        barco_9.create_ship()
+        barco_10.create_ship()
+        self.colocar_barcos(player_1, board_1, [barco_1, barco_2, barco_3, barco_4, barco_5])
+        self.colocar_barcos(player_2, board_2, [barco_6, barco_7, barco_8, barco_9, barco_10])
+
+
+        
+    def colocar_barcos(self, player, board, barcos):
+        print(f"{player.name}, Elige las posiciones de tus barcos en el tablero")
+        board.printBoard()
+        for barco in barcos:
+            x = int(input(f"Elige las coordenadas X para: {barco.name}"))
+            y = int(input(f"Elige las coordenadas Y para: {barco.name}"))
+            position = input(f"Elige la orientación del barco para: {barco.name}. \"H\": Horizontal / \"V\": Vertical \n")
+            barco.set_ship_in_board(board, x, y, position)
+            board.printBoard()
+
+            # Uso de la función
     def add_player(self, player):
-        self.players.append({player.name: player.ships})
+        self.players.append({"name":player.name, "ships":player.ships})
     
     def print_players(self):
         print(self.players)
-
-    def win_condition(self.players):
-        return
-
+                
+    def win_condition(self):
+        for i in self.players:
+            if len(i["ships"]) == 0:
+                return True
+            
+    def turn(self):
+        turn_player = 1
+        while turn_player:
+            if turn_player % 2 == 0:
+                p = 1
+            else:
+                p = 2
+            print(f"Turno de jugador {p}")
+            turn_player += 1
+    
+    # def positioning_Ships(self, player):
+        # Ship.set_ship_in_board(board, start_col, start_row, position)
 game1 = Game()
-
-board1 = Board(10,10)
-board1.createBoard()
-
-player1 = Player("Harold")
-
-aircraftCarrier1 = AircraftCarrier(player1)
-battleship1 = Battleship(player1)
-cruiser1 = Cruiser(player1)
-submarine1 = Submarine(player1)
-destroyer1 = Destroyer(player1)
-
-aircraftCarrier1.create_ship()
-battleship1.create_ship()
-cruiser1.create_ship()
-submarine1.create_ship()
-destroyer1.create_ship()
-
-
-aircraftCarrier1.set_ship_in_board(board1,10,1,"V")
-battleship1.set_ship_in_board(board1,1,2,"H")
-cruiser1.set_ship_in_board(board1,1,3,"H")
-submarine1.set_ship_in_board(board1,1,4,"H")
-destroyer1.set_ship_in_board(board1,1,5,"H")
-
-game1.add_player(player1)
-player1.printShips()
-player1.atack(board1, 1,10)
-player1.atack(board1, 2,10)
-player1.atack(board1, 3,10)
-player1.atack(board1, 4,10)
-player1.atack(board1, 5,10)
-player1.atack(board1, 2,1)
-player1.atack(board1, 2,2)
-player1.atack(board1, 2,3)
-player1.atack(board1, 2,4)
-player1.atack(board1, 3,1)
-player1.atack(board1, 3,2)
-player1.atack(board1, 3,3)
-player1.atack(board1, 4,1)
-player1.atack(board1, 4,2)
-player1.atack(board1, 4,3)
-player1.atack(board1, 5,1)
-player1.atack(board1, 5,2)
-
-board1.printBoard()
+game1.inicialize_game()
