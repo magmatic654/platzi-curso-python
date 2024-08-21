@@ -1,3 +1,4 @@
+import os
 class Board:
     def __init__(self, row=10, col=10):
         self.row = row
@@ -29,8 +30,8 @@ class Ship:
         self.name = ""
         self.coordinates_xy = []
         self.ship = {
-            "Name": self.name,
-            "Coordinates_xy": self.coordinates_xy,
+            "name": self.name,
+            "coordinates_xy": self.coordinates_xy,
         }
     def create_ship(self):
         raise NotImplementedError("Este metodo debe ser implementado por la subclase")
@@ -48,17 +49,18 @@ class Ship:
         else:
             raise ValueError("No se ha seleccionado una posicion H o V")
         
+        
         self.player.ships.append(self.ship)
 
-        # print(self.player.ships[0]["Coordinates_xy"])
+        # print(self.player.ships[0]["coordinates_xy"])
     
 class AircraftCarrier(Ship):
     def create_ship(self):
         self.name = "AircraftCarrier"
         self.cells = ["A"] *5
         self.ship = {
-            "Name": self.name,
-            "Coordinates_xy": self.coordinates_xy,
+            "name": self.name,
+            "coordinates_xy": self.coordinates_xy,
 
         }
 class Battleship(Ship):
@@ -66,8 +68,8 @@ class Battleship(Ship):
         self.name = "Battleship"
         self.cells = ["B"] * 4
         self.ship = {
-            "Name": self.name,
-            "Coordinates_xy": self.coordinates_xy
+            "name": self.name,
+            "coordinates_xy": self.coordinates_xy
         }
         
 class Cruiser(Ship):
@@ -75,24 +77,24 @@ class Cruiser(Ship):
         self.name = "Cruiser"
         self.cells = ["C"] * 3
         self.ship = {
-            "Name": self.name,
-            "Coordinates_xy": self.coordinates_xy
+            "name": self.name,
+            "coordinates_xy": self.coordinates_xy
         }
 class Submarine (Ship):
     def create_ship(self):
         self.name = "Submarine"
         self.cells = ["S"] * 3
         self.ship = {
-            "Name": self.name,
-            "Coordinates_xy": self.coordinates_xy
+            "name": self.name,
+            "coordinates_xy": self.coordinates_xy
         }
 class Destroyer (Ship):
     def create_ship(self):
         self.name = "Destroyer"
         self.cells = ["D"] * 2
         self.ship = {
-            "Name": self.name,
-            "Coordinates_xy": self.coordinates_xy
+            "name": self.name,
+            "coordinates_xy": self.coordinates_xy
         }
 
 class Player:
@@ -109,7 +111,7 @@ class Player:
             print("¡Has dado en un blanco!")
             
             for ship in self.ships:
-                coordenates = ship['Coordinates_xy']
+                coordenates = ship['coordinates_xy']
                 
                 # Convertir la coordenada del ataque en una lista para comparación
                 ataque = [row, col]
@@ -120,7 +122,7 @@ class Player:
                     
                     # Verificar si el barco ha sido destruido
                     if not coordenates:
-                        print(f"¡{ship['Name']} ha sido destruido!")
+                        print(f"¡{ship['name']} ha sido destruido!")
                         self.ships.remove(ship)  # Eliminar el barco destruido
                     break
         else:
@@ -147,13 +149,12 @@ class Game():
         board_1.createBoard()
         board_2.createBoard()
         
+        os.system('cls')
         self.template_ships(player_1, board_1)
+        os.system('cls')
         self.template_ships(player_2, board_2)
-
-
-        player_1.printShips()
-        player_2.printShips()
-
+        os.system('cls')
+        self.turn([player_1, player_2], [board_1, board_2])
         
     def set_ships(self, player, board, barcos):
         print(f"{player.name}, Elige las posiciones de tus barcos en el tablero")
@@ -188,7 +189,7 @@ class Game():
         
 
     def add_player(self, player):
-        self.players.append({"name":player.name, "ships":player.ships})
+        self.players.append({"name":player.name, "ships":player.ships, "player_obj": player})
     
     def print_players(self):
         print(self.players)
@@ -198,17 +199,33 @@ class Game():
             if len(i["ships"]) == 0:
                 return True
             
-    def turn(self):
+    def turn(self, players, boards):
         turn_player = 1
         while turn_player:
-            if turn_player % 2 == 0:
-                print(f"Turno de jugador 1")
-            else:
-                print(f"Turno de jugador 1")
-            
-            self.win_condition()
-            turn_player += 1
-    
+            player_name = players[turn_player-1].name
+            player_obj = players[turn_player-1]
 
+            if turn_player == 1:
+                print(f"{player_name}, es hora de atacar")
+                row = int(input("Elige la fila de ataque, coordenada X "))
+                col = int(input("Elige la columna de ataque, coordenada Y "))
+                player_obj.atack(boards[1], row, col)
+                boards[0].printBoard()
+                turn_player = 2
+            else:
+                row = int(input("Elige la fila de ataque, coordenada X "))
+                col = int(input("Elige la columna de ataque, coordenada Y "))
+                player_obj.atack(boards[0], row, col)
+                input(f"{player_name}, es hora de atacar")
+                boards[1].printBoard()
+                turn_player = 1
+            
+                
+            os.system('cls')
+            if self.win_condition():
+                return print(f"{player_name} ha ganado")
+
+        
+        
 game1 = Game()
 game1.inicialize_game()
