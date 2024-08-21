@@ -221,7 +221,6 @@ class Game():
                 turn_player = 1
             
                 
-            os.system('cls')
             if self.win_condition():
                 return print(f"{player_name} ha ganado")
 
