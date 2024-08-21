@@ -39,19 +39,18 @@ class Ship:
         if position == "H":
             row = board.board[start_row - 1]
             for i in range(len(self.cells)):
-                if row[start_col - 1 + i] != board.water:
-                    return print("Hubo un error")
-            for i in range(len(self.cells)):
                 row[start_col - 1 + i] = self.cells[i]
                 self.coordinates_xy.append([start_row, i+1])
         elif position == "V":
             for i in range(len(self.cells)):
-                if board.board[start_row - 1 + i][start_col - 1] != board.water:
-                    return print("Hubo un error")
-            for i in range(len(self.cells)):
                 board.board[start_row - 1 + i][start_col - 1] = self.cells[i]
                 self.coordinates_xy.append([i+1, start_col])
+        else:
+            raise ValueError("No se ha seleccionado una posicion H o V")
+        
         self.player.ships.append(self.ship)
+
+        # print(self.player.ships[0]["Coordinates_xy"])
     
 class AircraftCarrier(Ship):
     def create_ship(self):
@@ -148,45 +147,46 @@ class Game():
         board_1.createBoard()
         board_2.createBoard()
         
-        barco_1 = AircraftCarrier(player_1)
-        barco_2 = Battleship(player_1)
-        barco_3 = Battleship(player_1)
-        barco_4 = Cruiser(player_1)
-        barco_5 = Submarine(player_1)
+        self.template_ships(player_1, board_1)
+        self.template_ships(player_2, board_2)
 
-        barco_1.create_ship()
-        barco_2.create_ship()
-        barco_3.create_ship()
-        barco_4.create_ship()
-        barco_5.create_ship()
-        
-        barco_6 = AircraftCarrier(player_1)
-        barco_7 = Battleship(player_1)
-        barco_8 = Battleship(player_1)
-        barco_9 = Cruiser(player_1)
-        barco_10 = Submarine(player_1)
 
-        barco_6.create_ship()
-        barco_7.create_ship()
-        barco_8.create_ship()
-        barco_9.create_ship()
-        barco_10.create_ship()
-        self.colocar_barcos(player_1, board_1, [barco_1, barco_2, barco_3, barco_4, barco_5])
-        self.colocar_barcos(player_2, board_2, [barco_6, barco_7, barco_8, barco_9, barco_10])
-
+        player_1.printShips()
+        player_2.printShips()
 
         
-    def colocar_barcos(self, player, board, barcos):
+    def set_ships(self, player, board, barcos):
         print(f"{player.name}, Elige las posiciones de tus barcos en el tablero")
         board.printBoard()
-        for barco in barcos:
-            x = int(input(f"Elige las coordenadas X para: {barco.name}"))
-            y = int(input(f"Elige las coordenadas Y para: {barco.name}"))
-            position = input(f"Elige la orientación del barco para: {barco.name}. \"H\": Horizontal / \"V\": Vertical \n")
-            barco.set_ship_in_board(board, x, y, position)
-            board.printBoard()
+        try:
+            for barco in barcos:
+                x = int(input(f"{player.name}. Elige las coordenadas X para: {barco.name}.\n"))
+                y = int(input(f"{player.name}. Elige las coordenadas Y para: {barco.name}.\n"))
+                position = input(f"{player.name}. Elige la orientación del barco para: {barco.name}. \"H\": Horizontal / \"V\": Vertical. \n").upper()
+                barco.set_ship_in_board(board, x, y, position)
+                board.printBoard()
+        except:
+               print("Intenta nuevamente")
+               player.ships = []
+               return self.set_ships(player, board, barcos) 
+                
+    
+    def template_ships(self, player, board):
+        aircraftCarrier =AircraftCarrier(player)
+        battleship = Battleship(player)
+        cruiser = Cruiser(player)
+        submarine = Submarine(player)
+        destroyer = Destroyer(player)
 
-            # Uso de la función
+        aircraftCarrier.create_ship()
+        battleship.create_ship()
+        cruiser.create_ship()
+        submarine.create_ship()
+        destroyer.create_ship()
+
+        self.set_ships(player, board, [aircraftCarrier, battleship, cruiser, submarine, destroyer])
+        
+
     def add_player(self, player):
         self.players.append({"name":player.name, "ships":player.ships})
     
@@ -202,13 +202,13 @@ class Game():
         turn_player = 1
         while turn_player:
             if turn_player % 2 == 0:
-                p = 1
+                print(f"Turno de jugador 1")
             else:
-                p = 2
-            print(f"Turno de jugador {p}")
+                print(f"Turno de jugador 1")
+            
+            self.win_condition()
             turn_player += 1
     
-    # def positioning_Ships(self, player):
-        # Ship.set_ship_in_board(board, start_col, start_row, position)
+
 game1 = Game()
 game1.inicialize_game()
