@@ -213,10 +213,10 @@ class Game():
                 boards[0].printBoard()
                 turn_player = 2
             else:
+                print(f"{player_name}, es hora de atacar")
                 row = int(input("Elige la fila de ataque, coordenada X "))
                 col = int(input("Elige la columna de ataque, coordenada Y "))
                 player_obj.atack(boards[0], row, col)
-                input(f"{player_name}, es hora de atacar")
                 boards[1].printBoard()
                 turn_player = 1
             
