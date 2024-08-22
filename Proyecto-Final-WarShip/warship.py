@@ -185,7 +185,7 @@ class Game():
         submarine.create_ship()
         destroyer.create_ship()
 
-        self.set_ships(player, board, [aircraftCarrier, battleship, cruiser, submarine, destroyer])
+        self.set_ships(player, board, [ destroyer])
         
 
     def add_player(self, player):
@@ -197,6 +197,7 @@ class Game():
     def win_condition(self):
         for i in self.players:
             if len(i["ships"]) == 0:
+                print("Ganador")
                 return True
             
     def turn(self, players, boards):
@@ -204,20 +205,20 @@ class Game():
         while turn_player:
             player_name = players[turn_player-1].name
             player_obj = players[turn_player-1]
-
+            
             if turn_player == 1:
-                print(f"{player_name}, es hora de atacar")
-                row = int(input("Elige la fila de ataque, coordenada X "))
-                col = int(input("Elige la columna de ataque, coordenada Y "))
+                input(f"{player_name}, es hora de atacar")
+                col = int(input("Elige la columna de ataque, coordenada X "))
+                row = int(input("Elige la fila de ataque, coordenada Y "))
                 player_obj.atack(boards[1], row, col)
-                boards[0].printBoard()
+                boards[1].printBoard()
                 turn_player = 2
             else:
-                print(f"{player_name}, es hora de atacar")
-                row = int(input("Elige la fila de ataque, coordenada X "))
-                col = int(input("Elige la columna de ataque, coordenada Y "))
+                input(f"{player_name}, es hora de atacar")
+                col = int(input("Elige la columna de ataque, coordenada X "))
+                row = int(input("Elige la fila de ataque, coordenada Y "))
                 player_obj.atack(boards[0], row, col)
-                boards[1].printBoard()
+                boards[0].printBoard()
                 turn_player = 1
             
                 
